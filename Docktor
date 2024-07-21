@@ -1,0 +1,17 @@
+# Use a base image that supports Shellinabox, for example, Ubuntu
+FROM ubuntu:20.04
+
+# Install necessary packages
+RUN apt-get update && \
+    apt-get install -y shellinabox && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Create a non-root user
+RUN useradd -m user && echo 'user:user' | chpasswd
+
+# Expose the web-based terminal port
+EXPOSE 4200
+
+# Start Shellinabox with non-root user
+CMD ["/usr/bin/shellinaboxd", "-t", "-s", "/:user:HOME:/bin/bash"]
